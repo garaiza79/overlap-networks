@@ -173,24 +173,17 @@ def cargar_archivo(uploaded_file, nombre_alias):
                 st.error(f"No se encontró un archivo KML dentro del KMZ '{uploaded_file.name}'")
                 return None
             ruta_lectura = os.path.join(tmpdir, kml_files[0])
-            # Habilitar driver KML en fiona
-            import fiona
-            fiona.drv["KML"] = "rw"
-            fiona.drv["LIBKML"] = "rw"
-            gdf = gpd.read_file(ruta_lectura, driver="KML")
+            gdf = gpd.read_file(ruta_lectura, engine="pyogrio")
         elif ext == ".kml":
-            import fiona
-            fiona.drv["KML"] = "rw"
-            fiona.drv["LIBKML"] = "rw"
-            gdf = gpd.read_file(ruta_tmp, driver="KML")
+            gdf = gpd.read_file(ruta_tmp, engine="pyogrio")
         elif ext == ".zip":
             # Shapefile como ZIP
-            gdf = gpd.read_file(f"zip://{ruta_tmp}")
+            gdf = gpd.read_file(f"zip://{ruta_tmp}", engine="pyogrio")
         elif ext == ".shp":
-            gdf = gpd.read_file(ruta_tmp)
+            gdf = gpd.read_file(ruta_tmp, engine="pyogrio")
         else:
-            # GPKG u otro formato soportado por fiona
-            gdf = gpd.read_file(ruta_tmp)
+            # GPKG u otro formato soportado
+            gdf = gpd.read_file(ruta_tmp, engine="pyogrio")
 
     # Filtrar solo líneas
     lineas = gdf[gdf.geometry.type.isin(["LineString", "MultiLineString"])].copy()
