@@ -157,6 +157,7 @@ st.markdown("""
 
 def cargar_archivo(uploaded_file, nombre_alias):
     """Carga un archivo geoespacial (KMZ, KML, GPKG, SHP) y retorna GeoDataFrame de líneas."""
+    from shapely import make_valid
     ext = os.path.splitext(uploaded_file.name)[1].lower()
 
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -164,8 +165,10 @@ def cargar_archivo(uploaded_file, nombre_alias):
         with open(ruta_tmp, "wb") as f:
             f.write(uploaded_file.getbuffer())
 
+        # Leer con on_invalid="ignore" para saltarse geometrías corruptas
+        read_kwargs = {"engine": "pyogrio", "on_invalid": "ignore"}
+
         if ext == ".kmz":
-            # Descomprimir KMZ y leer el KML interior
             with zipfile.ZipFile(ruta_tmp, "r") as z:
                 z.extractall(tmpdir)
             kml_files = [f for f in os.listdir(tmpdir) if f.lower().endswith(".kml")]
@@ -173,17 +176,21 @@ def cargar_archivo(uploaded_file, nombre_alias):
                 st.error(f"No se encontró un archivo KML dentro del KMZ '{uploaded_file.name}'")
                 return None
             ruta_lectura = os.path.join(tmpdir, kml_files[0])
-            gdf = gpd.read_file(ruta_lectura, engine="pyogrio")
+            gdf = gpd.read_file(ruta_lectura, **read_kwargs)
         elif ext == ".kml":
-            gdf = gpd.read_file(ruta_tmp, engine="pyogrio")
+            gdf = gpd.read_file(ruta_tmp, **read_kwargs)
         elif ext == ".zip":
-            # Shapefile como ZIP
-            gdf = gpd.read_file(f"zip://{ruta_tmp}", engine="pyogrio")
+            gdf = gpd.read_file(f"zip://{ruta_tmp}", **read_kwargs)
         elif ext == ".shp":
-            gdf = gpd.read_file(ruta_tmp, engine="pyogrio")
+            gdf = gpd.read_file(ruta_tmp, **read_kwargs)
         else:
-            # GPKG u otro formato soportado
-            gdf = gpd.read_file(ruta_tmp, engine="pyogrio")
+            gdf = gpd.read_file(ruta_tmp, **read_kwargs)
+
+    # Eliminar filas sin geometría
+    gdf = gdf[gdf.geometry.notna()].copy()
+
+    # Reparar geometrías inválidas
+    gdf["geometry"] = gdf.geometry.apply(lambda g: make_valid(g) if g is not None and not g.is_valid else g)
 
     # Filtrar solo líneas
     lineas = gdf[gdf.geometry.type.isin(["LineString", "MultiLineString"])].copy()
