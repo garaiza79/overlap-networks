@@ -1,5 +1,5 @@
 geopandas
 shapely
-fiona
+pyogrio
 simplekml
 pandas
