@@ -67,15 +67,6 @@ st.markdown("""
     .status-badge { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
     .status-ok { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
     .status-warn { background: rgba(234, 179, 8, 0.15); color: #facc15; }
-    section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] .stFileUploader label,
-    section[data-testid="stSidebar"] .stTextInput label,
-    section[data-testid="stSidebar"] .stSlider label,
-    section[data-testid="stSidebar"] .stCheckbox label,
-    section[data-testid="stSidebar"] span,
-    section[data-testid="stSidebar"] p,
-    section[data-testid="stSidebar"] .stMarkdown p,
-    section[data-testid="stSidebar"] .stMarkdown label { color: #e2e8f0 !important; }
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
