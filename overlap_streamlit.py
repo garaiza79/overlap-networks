@@ -77,6 +77,15 @@ st.markdown("""
     section[data-testid="stSidebar"] p,
     section[data-testid="stSidebar"] .stMarkdown p,
     section[data-testid="stSidebar"] .stMarkdown label { color: #e2e8f0 !important; }
+    section[data-testid="stSidebar"] .stFileUploader div[data-testid="stFileUploaderDropzone"] {
+        background: #1e293b !important;
+        border: 1px dashed #475569 !important;
+    }
+    section[data-testid="stSidebar"] .stFileUploader div[data-testid="stFileUploaderDropzone"] span,
+    section[data-testid="stSidebar"] .stFileUploader div[data-testid="stFileUploaderDropzone"] small,
+    section[data-testid="stSidebar"] .stFileUploader div[data-testid="stFileUploaderDropzone"] p {
+        color: #94a3b8 !important;
+    }
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
