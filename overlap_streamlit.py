@@ -69,7 +69,6 @@ st.markdown("""
     .status-warn { background: rgba(234, 179, 8, 0.15); color: #facc15; }
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    header {visibility: hidden;}
 </style>
 """, unsafe_allow_html=True)
 
